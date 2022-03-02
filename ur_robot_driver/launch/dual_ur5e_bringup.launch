@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="r1_ip" default="192.168.0.1"/>
+    <arg name="r2_ip" default="192.168.0.2"/>
+    <arg name="r1_kinematics_config" default="$(find ur5e_moveit_config)/calibration/ex-ur5_e_calibration1.yaml"/>
+    <arg name="r2_kinematics_config" default="$(find ur5e_moveit_config)/calibration/ex-ur5_e_calibration2.yaml"/>
+    <arg name="r1_port1" default="50001"/>
+    <arg name="r2_port1" default="50004"/>
+    <arg name="r1_port2" default="50002"/>
+    <arg name="r2_port2" default="50005"/>
+    <arg name="r1_port3" default="50003"/>
+    <arg name="r2_port3" default="50006"/>
+    <arg name="r1_controller_config_file" default="$(find ur_robot_driver)/config/1ur5e_controllers.yaml" />
+    <arg name="r2_controller_config_file" default="$(find ur_robot_driver)/config/2ur5e_controllers.yaml" />
+    <arg name="tf_prefix" default=""/>
+
+    <!--arg name="both_robot_description_file" default="$(find my_scene_description)/launch/rw_dual_ur5e_upload.launch" doc="Robot description launch file."/-->
+
+    <group ns="Robot1_">
+        <!--remap from="/a/joint_states" to="/joint_states"/-->
+        <include file="$(find ur_robot_driver)/launch/ur5e_bringup.launch">
+            <arg name="robot_ip" value="$(arg r1_ip)" />
+            <arg name="kinematics_config" value="$(arg r1_kinematics_config)" />
+            <arg name="reverse_port" value="$(arg r1_port1)" />
+            <arg name="script_sender_port" value="$(arg r1_port2)" />
+            <arg name="trajectory_port" value="$(arg r1_port3)" />
+            <arg name="controller_config_file" value="$(arg r1_controller_config_file)"/>
+            <!--arg name="robot_description_file" value="$(find ur_description)/launch/load_ur5e.launch"/-->
+            <arg name="robot_description_file" value="$(find ur5_with_zimmer_gripper)/launch/load_ur5e_zimmer.launch"/>
+            <arg name="tf_prefix" value="Robot1_" />
+            <arg name="controllers" default="my_cartesian_compliance_controller joint_state_controller force_torque_sensor_controller" doc="Controllers that are activated by default."/>
+    <!--arg name="stopped_controllers" default="pos_joint_traj_controller joint_group_vel_controller" doc="Controllers that are initally loaded, but not started."-->            
+            <arg name="stopped_controllers" default="my_cartesian_motion_controller my_cartesian_force_controller scaled_pos_joint_traj_controller pos_joint_traj_controller joint_group_vel_controller" doc="Controllers that are initally loaded, but not started."/>
+        </include>
+        <!-- Add a gripper controller to the scene -->        
+		<include file="$(find ur5_with_zimmer_gripper)/launch/zimmer_gripper_controller.launch"/>
+    </group>
+
+    <group ns="Robot2_">
+        <!--remap from="/b/joint_states" to="/joint_states"/-->
+        <include file="$(find ur_robot_driver)/launch/ur5e_bringup.launch">
+            <arg name="robot_ip" value="$(arg r2_ip)" />
+            <arg name="kinematics_config" value="$(arg r2_kinematics_config)" />
+            <arg name="reverse_port" value="$(arg r2_port1)" />
+            <arg name="script_sender_port" value="$(arg r2_port2)" />
+            <arg name="trajectory_port" value="$(arg r2_port3)" />
+            <arg name="controller_config_file" value="$(arg r2_controller_config_file)"/>
+            <!--arg name="robot_description_file" value="$(find ur_description)/launch/load_ur5e.launch"/-->
+            <arg name="robot_description_file" value="$(find ur5_with_needle_gripper)/launch/load_ur5e_needle.launch"/>
+            <arg name="tf_prefix" value="Robot2_" />
+        </include>
+    </group>
+
+    <!-- <remap from="/a/joint_states" to="/joint_states"/> -->
+  <!-- Visualization -->
+    <arg name="my_rviz" value="-d $(find ur_robot_driver)/launch/smb_cell.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="$(arg my_rviz)" output="screen" >
+    </node>
+	<include file="$(find RobotCell)/launch/displayCell.launch"/>
+    
+    <!-- launch the gripper node for unwrinkle the cloth -->
+    <node pkg="smb_tests" name="Contact_cloth_unwrinkle" type="gripper_node.py" output="screen"/> <!-- the pub and sub are hardcoded!! -->
+
+</launch>
