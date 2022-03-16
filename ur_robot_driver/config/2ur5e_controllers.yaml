@@ -138,15 +138,15 @@ my_cartesian_motion_controller:
         error_scale: 10
         iterations: 10
     pd_gains:
-        trans_x: {p: 6.1, d: 0.75}
-        trans_y: {p: 6.1, d: 0.75}
-        trans_z: {p: 6.1, d: 0.75}
-        rot_x: {p: 1.0}
-        rot_y: {p: 6.1}
-        rot_z: {p: 1.0}
+        trans_x: {p: 6.1, d: 1.1}
+        trans_y: {p: 6.1, d: 1.1}
+        trans_z: {p: 6.1, d: 1.1}
+        rot_x: {p: 6.1, d: 1.1}
+        rot_y: {p: 6.1, d: 1.1}
+        rot_z: {p: 6.1, d: 1.1}
     solver: 
         error_scale: 0.1
-        iterations: 23  
+        iterations: 30
 
 my_cartesian_compliance_controller:
     type: "position_controllers/CartesianComplianceController"
