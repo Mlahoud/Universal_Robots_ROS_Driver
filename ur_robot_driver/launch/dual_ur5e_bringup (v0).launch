@@ -5,11 +5,11 @@
     <arg name="r1_kinematics_config" default="$(find ur5e_moveit_config)/calibration/ex-ur5_e_calibration1.yaml"/>
     <arg name="r2_kinematics_config" default="$(find ur5e_moveit_config)/calibration/ex-ur5_e_calibration2.yaml"/>
     <arg name="r1_port1" default="50001"/>
-    <arg name="r2_port1" default="50004"/>
+    <arg name="r2_port1" default="50005"/>
     <arg name="r1_port2" default="50002"/>
-    <arg name="r2_port2" default="50005"/>
+    <arg name="r2_port2" default="50006"/>
     <arg name="r1_port3" default="50003"/>
-    <arg name="r2_port3" default="50006"/>
+    <arg name="r2_port3" default="50007"/>
     <arg name="r1_controller_config_file" default="$(find ur_robot_driver)/config/1ur5e_controllers.yaml" />
     <arg name="r2_controller_config_file" default="$(find ur_robot_driver)/config/2ur5e_controllers.yaml" />
     <arg name="tf_prefix" default=""/>
